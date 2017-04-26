@@ -15,7 +15,7 @@ app.get('/instagram/auth', function (req, res) {
   const url = `https://api.instagram.com/oauth/authorize/` +
               `?client_id=${CLIENT_ID}` +
               `&redirect_uri=${REDIRECT_URI}` +
-              `&response_type=code`
+              `&response_type=code`;
   res.redirect(url);
 });
 
