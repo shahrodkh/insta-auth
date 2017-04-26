@@ -12,7 +12,10 @@ app.get('/', function (req, res) {
 });
 
 app.get('/instagram/auth', function (req, res) {
-  const url = `https://api.instagram.com/oauth/authorize/?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+  const url = `https://api.instagram.com/oauth/authorize/` +
+              `?client_id=${CLIENT_ID}` +
+              `&redirect_uri=${REDIRECT_URI}` +
+              `&response_type=code`
   res.redirect(url);
 });
 
@@ -24,14 +27,18 @@ app.get('/instagram/callback', function (req, res) {
     redirect_uri: REDIRECT_URI,
     code: req.query.code
   };
-  const url = 'https://api.instagram.com/oauth/access_token/';
+  const url = 'https://api.instagram.com/oauth/access_token';
   request.post({ url, formData }, function (err, resp, body) {
     if (err) return res.send(500, err);
-
-    res.send(body);
+    const access_token = JSON.parse(body).access_token;
+    res.cookie('token', access_token);
+    const url = `https://api.instagram.com/v1/users/self/` +
+                `?access_token=${access_token}`;
+    request(url, function(err, resp, body) {
+      if (err) return res.send(500, err);
+      res.send(body);
+    });
   });
 });
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!')
-})
+app.listen(3000);
