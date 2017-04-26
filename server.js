@@ -7,11 +7,11 @@ const REDIRECT_URI = "http://localhost:3000/instagram/callback";
 var app = express();
 app.use(cookieParser());
 
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/instagram/auth', function (req, res) {
+app.get('/instagram/auth', (req, res) => {
   const url = `https://api.instagram.com/oauth/authorize/` +
               `?client_id=${CLIENT_ID}` +
               `&redirect_uri=${REDIRECT_URI}` +
@@ -19,7 +19,7 @@ app.get('/instagram/auth', function (req, res) {
   res.redirect(url);
 });
 
-app.get('/instagram/callback', function (req, res) {
+app.get('/instagram/callback', (req, res) => {
   const formData = {
     client_id: CLIENT_ID,
     client_secret: CLIENT_SECRET,
@@ -28,13 +28,13 @@ app.get('/instagram/callback', function (req, res) {
     code: req.query.code
   };
   const url = 'https://api.instagram.com/oauth/access_token';
-  request.post({ url, formData }, function (err, resp, body) {
+  request.post({ url, formData }, (err, resp, body) => {
     if (err) return res.send(500, err);
     const access_token = JSON.parse(body).access_token;
     res.cookie('token', access_token);
     const url = `https://api.instagram.com/v1/users/self/` +
                 `?access_token=${access_token}`;
-    request(url, function(err, resp, body) {
+    request(url, (err, resp, body) => {
       if (err) return res.send(500, err);
       res.send(body);
     });
