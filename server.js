@@ -1,10 +1,10 @@
-var express = require('express');
-var request = require('request');
-var cookieParser = require('cookie-parser');
+const express = require('express');
+const request = require('request');
+const cookieParser = require('cookie-parser');
 const { CLIENT_ID, CLIENT_SECRET } = require('./keys');
 const REDIRECT_URI = "http://localhost:3000/instagram/callback";
 
-var app = express();
+const app = express();
 app.use(cookieParser());
 
 app.get('/', (req, res) => {
